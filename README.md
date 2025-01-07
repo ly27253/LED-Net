@@ -1,49 +1,48 @@
 # LED-Net Setup Guide
 
 ## 1. Environment Setup  
-This project is based on [MMsegmentation](https://github.com/open-mmlab/mmsegmentation). To set up the environment, please follow the official installation guide:  
+This project is built on top of [MMsegmentation](https://github.com/open-mmlab/mmsegmentation). To configure the environment, please follow the official installation guide:  
 - [MMsegmentation Installation Guide](https://github.com/open-mmlab/mmsegmentation/blob/main/docs/en/get_started.md#installation)
 
-## 2. Dataset  
-In addition to the configuration files for public datasets like Cityscapes, ADE, COCO, and CamVid, we have written custom dataset loading scripts to support our proprietary *Apple Branch Seg data* dataset. The directory structure is as follows:  
+## 2. Dataset Structure
 
-## Dataset Structure
-
-In addition to the configuration files for public datasets like Cityscapes, ADE, COCO, and CamVid, we have written custom dataset loading scripts to support our proprietary *Apple Branch Seg data* dataset. The directory structure is as follows:
+In addition to the configuration files provided for commonly used public datasets such as Cityscapes, ADE, COCO, and CamVid, we have developed custom dataset loading scripts to accommodate our proprietary *Apple Branch Seg data* dataset. The structure of the dataset is as follows:
 
 <pre>
 ├── Apple Branch Seg data 
-        ├── JPEGImages              # Contains original images 
-        ├── SegmentationClassPNG    # Contains segmentation labels 
-        ├── train.txt               # Training data split 
-        └── val.txt                 # Validation data split
+        ├── JPEGImages              # Original images of the dataset 
+        ├── SegmentationClassPNG    # Corresponding segmentation labels in PNG format 
+        ├── train.txt               # File defining the training data split 
+        └── val.txt                 # File defining the validation data split
 </pre>
 
+- **JPEGImages**: Directory containing the original images for the dataset.  
+- **SegmentationClassPNG**: Directory containing the segmentation labels in PNG format, corresponding to the original images.  
+- **train.txt** & **val.txt**: Files that define the data splits for training and validation.
 
-- **JPEGImages**: Original images of the dataset.  
-- **SegmentationClassPNG**: Corresponding segmentation labels in PNG format.  
-- **train.txt** & **val.txt**: Files that define the training and validation data splits.
+To integrate this dataset into your workflow, please update the dataset path and directory structure in the `../configs/_base_/datasets/pascal_voc12.py` configuration file. Additionally, ensure that the `classes` and `palette` settings in the `../mmseg/datasets/voc.py` file are adjusted to reflect the specific classes and image file extensions used in your dataset.
 
-To use this dataset, update the dataset path and directory structure in the `../configs/_base_/datasets/pascal_voc12.py` configuration file. Additionally, adjust the `classes` and `palette` in the `../mmseg/datasets/voc.py` file according to your dataset's types and image file extensions.
+**Dataset Download**:  
+You can download the *Apple Branch Seg data* dataset from [here](#). 
 
 ## 3. Model Training  
-For training the LED-Net model, use the following configuration file:  
+To train the LED-Net model, use the configuration file located at:  
 `../configs/LED_Net/LEDNet_80k_cityscapes-1024x1024.py`  
 
-Set the work directory to save logs and models:  
-`--work-dir`, default is `../LEDNet_fordata_11g07`, help='Directory to save logs and models'  
+Specify the work directory where logs and model checkpoints will be saved:  
+`--work-dir`, default path is `../LEDNet_fordata_11g07`. This directory is where logs and models will be stored.  
 
-Adjust other parameters as per the provided instructions.
+Adjust additional training parameters according to the provided documentation to suit your specific requirements.
 
 ## 4. Model Testing  
-To test the trained model, use the following configuration and checkpoint settings:  
-- **Config file**: `../configs/LED_Net/LEDNet_80k_cityscapes-1024x1024.py`  
+For testing the trained model, configure the following settings:  
+- **Configuration file**: `../configs/LED_Net/LEDNet_80k_cityscapes-1024x1024.py`  
 - **Checkpoint file**: `../lednet_fordata_11g15/iter_80000.pth`  
 
 You can download the pretrained model checkpoint `iter_80000.pth` from [this link](#).
 
 ## 5. Model Performance (FLOPs) Testing  
-To evaluate the model's computational cost (FLOPs), use the `get_flops.py` script and set the appropriate parameters.
+To evaluate the computational complexity of the model (FLOPs), utilize the `get_flops.py` script. Please set the appropriate parameters to obtain the required performance metrics.
 
 ## 6. Inference Speed Benchmarking  
-To benchmark the inference speed, use the `benchmark.py` script and adjust the settings as needed.
+For benchmarking the inference speed of the trained model, use the `benchmark.py` script. Adjust the script parameters as needed to assess the model’s efficiency under different conditions.
