@@ -23,7 +23,7 @@ In addition to the configuration files provided for commonly used public dataset
 To integrate this dataset into your workflow, please update the dataset path and directory structure in the `../configs/_base_/datasets/pascal_voc12.py` configuration file. Additionally, ensure that the `classes` and `palette` settings in the `../mmseg/datasets/voc.py` file are adjusted to reflect the specific classes and image file extensions used in your dataset.
 
 **Dataset Download**:  
-You can download the *Apple Branch Seg data* dataset from [here](#). 
+You can download the *Apple Branch Seg data* dataset from [here](https://drive.google.com/drive/u/0/folders/1Yw_rb0LoRG5CbLaSbzgNX7aReTlF5cWA). 
 
 ## 3. Model Training  
 To train the LED-Net model, use the configuration file located at:  
@@ -39,7 +39,7 @@ For testing the trained model, configure the following settings:
 - **Configuration file**: `../configs/LED_Net/LEDNet_80k_cityscapes-1024x1024.py`  
 - **Checkpoint file**: `../lednet_fordata_11g15/iter_80000.pth`  
 
-You can download the pretrained model checkpoint `iter_80000.pth` from [this link](#).
+You can download the pretrained model checkpoint `iter_80000.pth` from [this link](https://drive.google.com/drive/u/0/folders/1Yw_rb0LoRG5CbLaSbzgNX7aReTlF5cWA).
 
 ## 5. Model Performance (FLOPs) Testing  
 To evaluate the computational complexity of the model (FLOPs), utilize the `get_flops.py` script. Please set the appropriate parameters to obtain the required performance metrics.
