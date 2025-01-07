@@ -12,7 +12,7 @@ In addition to the configuration files for public datasets like Cityscapes, ADE,
 In addition to the configuration files for public datasets like Cityscapes, ADE, COCO, and CamVid, we have written custom dataset loading scripts to support our proprietary *Apple Branch Seg data* dataset. The directory structure is as follows:
 
 <pre>
-Apple Branch Seg data 
+├── Apple Branch Seg data 
         ├── JPEGImages              # Contains original images 
         ├── SegmentationClassPNG    # Contains segmentation labels 
         ├── train.txt               # Training data split 
