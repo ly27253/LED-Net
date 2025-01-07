@@ -7,11 +7,18 @@ This project is based on [MMsegmentation](https://github.com/open-mmlab/mmsegmen
 ## 2. Dataset  
 In addition to the configuration files for public datasets like Cityscapes, ADE, COCO, and CamVid, we have written custom dataset loading scripts to support our proprietary *Apple Branch Seg data* dataset. The directory structure is as follows:  
 
+## Dataset Structure
+
+In addition to the configuration files for public datasets like Cityscapes, ADE, COCO, and CamVid, we have written custom dataset loading scripts to support our proprietary *Apple Branch Seg data* dataset. The directory structure is as follows:
+
+<pre>
 Apple Branch Seg data 
-           ├── JPEGImages # Contains original images 
-           ├── SegmentationClassPNG # Contains segmentation labels 
-           ├── train.txt # Training data split 
-           └── val.txt # Validation data split
+├── JPEGImages              # Contains original images 
+├── SegmentationClassPNG    # Contains segmentation labels 
+├── train.txt               # Training data split 
+└── val.txt                 # Validation data split
+</pre>
+
 
 - **JPEGImages**: Original images of the dataset.  
 - **SegmentationClassPNG**: Corresponding segmentation labels in PNG format.  
