@@ -13,10 +13,10 @@ In addition to the configuration files for public datasets like Cityscapes, ADE,
 
 <pre>
 Apple Branch Seg data 
-├── JPEGImages              # Contains original images 
-├── SegmentationClassPNG    # Contains segmentation labels 
-├── train.txt               # Training data split 
-└── val.txt                 # Validation data split
+        ├── JPEGImages              # Contains original images 
+        ├── SegmentationClassPNG    # Contains segmentation labels 
+        ├── train.txt               # Training data split 
+        └── val.txt                 # Validation data split
 </pre>
 
 
