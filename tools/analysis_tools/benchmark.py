@@ -14,6 +14,10 @@ from mmengine.utils import mkdir_or_exist
 
 from mmseg.registry import MODELS
 
+'''
+/home/g/mmsegmentation/configs/stdc/stdc2_in1k-pre_4xb12-80k_cityscapes-512x1024.py
+/home/g/mmsegmentation/outputs/stdc_u2net/iter_80000.pth
+'''
 
 def parse_args():
     parser = argparse.ArgumentParser(description='MMSeg benchmark a model')
@@ -77,6 +81,7 @@ def main():
         # the first several iterations may be very slow so skip them
         num_warmup = 5
         pure_inf_time = 0
+        # total_iters = 200
         total_iters = 200
 
         # benchmark with 200 batches and take the average

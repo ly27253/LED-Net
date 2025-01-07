@@ -13,6 +13,7 @@ from mmseg.structures import build_pixel_sampler
 from mmseg.utils import ConfigType, SampleList
 from ..losses import accuracy
 from ..utils import resize
+import math
 
 
 class BaseDecodeHead(BaseModule, metaclass=ABCMeta):
@@ -358,9 +359,21 @@ class BaseDecodeHead(BaseModule, metaclass=ABCMeta):
         else:
             size = batch_img_metas[0]['img_shape']
 
-        seg_logits = resize(
-            input=seg_logits,
+        # ly 修改 20240705
+        size = tuple(math.ceil(s*2) for s in seg_logits[1].shape[2:])   # 测试速度时图像裁剪向上取整
+        seg_logits_r = seg_logits[2] + resize(
+            seg_logits[0],
+            size=tuple(math.ceil(s / 4) for s in size),
+            mode='bilinear',
+            align_corners=self.align_corners)
+        seg_logits_r = seg_logits[1] + resize(
+            seg_logits_r,
+            size=tuple(math.ceil(s / 2) for s in size),
+            mode='bilinear',
+            align_corners=self.align_corners)
+        seg_logits_r = resize(
+            input=seg_logits_r,
             size=size,
             mode='bilinear',
             align_corners=self.align_corners)
-        return seg_logits
+        return seg_logits_r         # ly 修改 20240705

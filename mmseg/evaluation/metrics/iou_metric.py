@@ -258,6 +258,15 @@ class IoUMetric(BaseMetric):
                 acc = total_area_intersect / total_area_label
                 ret_metrics['IoU'] = iou
                 ret_metrics['Acc'] = acc
+
+                precision = total_area_intersect / total_area_pred_label
+                recall = total_area_intersect / total_area_label
+                f_value = torch.tensor([
+                    f_score(x[0], x[1], beta) for x in zip(precision, recall)
+                ])
+                ret_metrics['Fscore'] = f_value
+                ret_metrics['Precision'] = precision
+                ret_metrics['Recall'] = recall
             elif metric == 'mDice':
                 dice = 2 * total_area_intersect / (
                     total_area_pred_label + total_area_label)

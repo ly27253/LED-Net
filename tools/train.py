@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import torch
 import argparse
 import logging
 import os
@@ -10,11 +11,16 @@ from mmengine.runner import Runner
 
 from mmseg.registry import RUNNERS
 
+'''
+
+/media/ly/AddDisk/InstanceSeg/ddr_and_pid/mmsegmentation_11g07/configs/LED_Net/LEDNet_80k_cityscapes-1024x1024.py
+'''
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a segmentor')
     parser.add_argument('config', help='train config file path')
-    parser.add_argument('--work-dir', help='the dir to save logs and models')
+    parser.add_argument('--work-dir', default="/media/ly/AddDisk/InsSegData/pid_and_ddr_out/ddr_fordata_11g07", help='the dir to save logs and models')
     parser.add_argument(
         '--resume',
         action='store_true',
@@ -99,6 +105,7 @@ def main():
     # start training
     runner.train()
 
+torch.autograd.set_detect_anomaly(True)
 
 if __name__ == '__main__':
     main()

@@ -1,10 +1,12 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import Dict, List, Optional
 
+import os
 import cv2
 import mmcv
 import numpy as np
 import torch
+from PIL import Image
 from mmengine.dist import master_only
 from mmengine.structures import PixelData
 from mmengine.visualization import Visualizer
@@ -72,7 +74,7 @@ class SegLocalVisualizer(Visualizer):
                  classes: Optional[List] = None,
                  palette: Optional[List] = None,
                  dataset_name: Optional[str] = None,
-                 alpha: float = 0.8,
+                 alpha: float = 0.50,  # alpha设置透明度，值越小透明度越高
                  **kwargs):
         super().__init__(name, image, vis_backends, save_dir, **kwargs)
         self.alpha: float = alpha
@@ -125,60 +127,79 @@ class SegLocalVisualizer(Visualizer):
         Returns:
             np.ndarray: the drawn image which channel is RGB.
         """
+
         num_classes = len(classes)
 
         sem_seg = sem_seg.cpu().data
         ids = np.unique(sem_seg)[::-1]
         legal_indices = ids < num_classes
         ids = ids[legal_indices]
+        # 只保留branch的id
+        ids = ids[ids == 1]
         labels = np.array(ids, dtype=np.int64)
 
-        colors = [palette[label] for label in labels]
+        # colors = [palette[label] for label in labels]
+        colors = [[255, 0, 0]]  # ly 2024-12-01
 
         mask = np.zeros_like(image, dtype=np.uint8)
         for label, color in zip(labels, colors):
             mask[sem_seg[0] == label, :] = color
 
-        if with_labels:
-            font = cv2.FONT_HERSHEY_SIMPLEX
-            # (0,1] to change the size of the text relative to the image
-            scale = 0.05
-            fontScale = min(image.shape[0], image.shape[1]) / (25 / scale)
-            fontColor = (255, 255, 255)
-            if image.shape[0] < 300 or image.shape[1] < 300:
-                thickness = 1
-                rectangleThickness = 1
-            else:
-                thickness = 2
-                rectangleThickness = 2
-            lineType = 2
+        # 绘制“background”和“branch”文本
+        # if with_labels:
+        #     font = cv2.FONT_HERSHEY_SIMPLEX
+        #     # (0,1] to change the size of the text relative to the image
+        #     scale = 0.05
+        #     fontScale = min(image.shape[0], image.shape[1]) / (25 / scale)
+        #     fontColor = (255, 255, 255)
+        #     if image.shape[0] < 300 or image.shape[1] < 300:
+        #         thickness = 1
+        #         rectangleThickness = 1
+        #     else:
+        #         thickness = 2
+        #         rectangleThickness = 2
+        #     lineType = 2
+        #
+        #     if isinstance(sem_seg[0], torch.Tensor):
+        #         masks = sem_seg[0].numpy() == labels[:, None, None]
+        #     else:
+        #         masks = sem_seg[0] == labels[:, None, None]
+        #     masks = masks.astype(np.uint8)
+        #
+        #     for mask_num in range(len(labels)):
+        #         classes_id = labels[mask_num]
+        #         classes_color = colors[mask_num]
+        #         loc = self._get_center_loc(masks[mask_num])
+        #         text = classes[classes_id]
+        #         (label_width, label_height), baseline = cv2.getTextSize(
+        #             text, font, fontScale, thickness)
+        #
+        #         mask = cv2.rectangle(mask, loc,
+        #                              (loc[0] + label_width + baseline,
+        #                               loc[1] + label_height + baseline),
+        #                              classes_color, -1)
+        #         mask = cv2.rectangle(mask, loc,
+        #                              (loc[0] + label_width + baseline,
+        #                               loc[1] + label_height + baseline),
+        #                              (0, 0, 0), rectangleThickness)
+        #
+        #         mask = cv2.putText(mask, text, (loc[0], loc[1] + label_height),
+        #                            font, fontScale, fontColor, thickness,
+        #                            lineType)
 
-            if isinstance(sem_seg[0], torch.Tensor):
-                masks = sem_seg[0].numpy() == labels[:, None, None]
-            else:
-                masks = sem_seg[0] == labels[:, None, None]
-            masks = masks.astype(np.uint8)
-            for mask_num in range(len(labels)):
-                classes_id = labels[mask_num]
-                classes_color = colors[mask_num]
-                loc = self._get_center_loc(masks[mask_num])
-                text = classes[classes_id]
-                (label_width, label_height), baseline = cv2.getTextSize(
-                    text, font, fontScale, thickness)
-                mask = cv2.rectangle(mask, loc,
-                                     (loc[0] + label_width + baseline,
-                                      loc[1] + label_height + baseline),
-                                     classes_color, -1)
-                mask = cv2.rectangle(mask, loc,
-                                     (loc[0] + label_width + baseline,
-                                      loc[1] + label_height + baseline),
-                                     (0, 0, 0), rectangleThickness)
-                mask = cv2.putText(mask, text, (loc[0], loc[1] + label_height),
-                                   font, fontScale, fontColor, thickness,
-                                   lineType)
-        color_seg = (image * (1 - self.alpha) + mask * self.alpha).astype(
-            np.uint8)
+        # branch以外部分不作修改，branch的mask可以正常显示
+        color_seg = np.where(mask > 0, (image * (1 - self.alpha) + mask * self.alpha), image).astype(np.uint8)
+
+        # branch的mask可以正常显示，但是background部分乘了(1 - self.alpha)
+        # color_seg = (image * (1 - self.alpha) + mask * self.alpha).astype(np.uint8)
+
+        # branch以外部分可以正常显示，但是branch的部分相当于多加了branch*alpha
+        # color_seg = (image + mask * self.alpha).astype(np.uint8) # 005
         self.set_image(color_seg)
+        # 保存为图像
+        # image1 = Image.fromarray(color_seg)
+        # image1.save('output.png')
+
         return color_seg
 
     def _draw_depth_map(self, image: np.ndarray,
@@ -308,6 +329,7 @@ class SegLocalVisualizer(Visualizer):
                                             'segmentation results.'
                 gt_img_data = self._draw_sem_seg(image, data_sample.gt_sem_seg,
                                                  classes, palette, with_labels)
+                # mmcv.imwrite(mmcv.rgb2bgr(gt_img_data), '/media/g/mydata/results/ddr/ddr_06/000_gt.png')
 
             if 'gt_depth_map' in data_sample:
                 gt_img_data = gt_img_data if gt_img_data is not None else image
@@ -335,6 +357,10 @@ class SegLocalVisualizer(Visualizer):
 
         if gt_img_data is not None and pred_img_data is not None:
             drawn_img = np.concatenate((gt_img_data, pred_img_data), axis=1)
+            img_path = os.path.join('/media/ly/AddDisk/InsSegData/pid_and_ddr_out/ddr_fordata_11g15/test1014', name)
+            mmcv.imwrite(mmcv.rgb2bgr(pred_img_data), img_path)
+            # cv2和mmcv颜色空间不同
+            # cv2.imwrite('/media/g/mydata/results/ddr/ddr_06/000_cv.png', pred_img_data)
         elif gt_img_data is not None:
             drawn_img = gt_img_data
         else:

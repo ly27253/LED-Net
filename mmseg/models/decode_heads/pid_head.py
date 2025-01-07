@@ -130,9 +130,9 @@ class PIDHead(BaseDecodeHead):
         """
         if self.training:
             x_p, x_i, x_d = inputs
-            x_p = self.p_head(x_p, self.p_cls_seg)
-            x_i = self.i_head(x_i, self.cls_seg)
-            x_d = self.d_head(x_d, self.d_cls_seg)
+            x_p = self.p_head(x_p, self.p_cls_seg)  # s 语义
+            x_i = self.i_head(x_i, self.cls_seg)   # s 语义
+            x_d = self.d_head(x_d, self.d_cls_seg)   # b boundary
             return x_p, x_i, x_d
         else:
             return self.i_head(inputs, self.cls_seg)

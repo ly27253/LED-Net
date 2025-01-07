@@ -1,15 +1,19 @@
 _base_ = [
     '../_base_/models/bisenetv2.py',
-    '../_base_/datasets/cityscapes_1024x1024.py',
-    '../_base_/default_runtime.py', '../_base_/schedules/schedule_160k.py'
+    # '../_base_/datasets/cityscapes_1024x1024.py',
+    '../_base_/datasets/pascal_voc12.py',
+    '../_base_/default_runtime.py',
+    # '../_base_/schedules/schedule_160k.py'
+    '../_base_/schedules/schedule_80k.py'
 ]
-crop_size = (1024, 1024)
+# crop_size = (1024, 1024)
+crop_size = (512, 1024)
 data_preprocessor = dict(size=crop_size)
 norm_cfg = dict(type='SyncBN', requires_grad=True)
 models = dict(
     data_preprocessor=data_preprocessor,
     decode_head=dict(
-        sampler=dict(type='OHEMPixelSampler', thresh=0.7, min_kept=10000)),
+        sampler=dict(type='OHEMPixelSampler', thresh=0.7, min_kept=10000)),  # 只有置信分数在0.7以下的像素值点会被拿来训练
     auxiliary_head=[
         dict(
             type='FCNHead',

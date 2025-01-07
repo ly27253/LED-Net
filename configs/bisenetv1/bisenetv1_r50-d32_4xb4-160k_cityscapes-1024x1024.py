@@ -1,7 +1,10 @@
 _base_ = [
     '../_base_/models/bisenetv1_r18-d32.py',
-    '../_base_/datasets/cityscapes_1024x1024.py',
-    '../_base_/default_runtime.py', '../_base_/schedules/schedule_160k.py'
+    # '../_base_/datasets/cityscapes_1024x1024.py',
+    '../_base_/datasets/pascal_voc12.py',
+    '../_base_/default_runtime.py',
+    # '../_base_/schedules/schedule_160k.py'
+    '../_base_/schedules/schedule_80k.py'
 ]
 norm_cfg = dict(type='SyncBN', requires_grad=True)
 crop_size = (1024, 1024)

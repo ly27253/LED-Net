@@ -6,6 +6,21 @@ import os.path as osp
 from mmengine.config import Config, DictAction
 from mmengine.runner import Runner
 
+'''
+/home/g/mmsegmentation/configs/stdc/stdc2_in1k-pre_4xb12-80k_cityscapes-512x1024.py
+/home/g/mmsegmentation/outputs/stdc/iter_80000.pth
+'''
+'''
+/media/ly/AddDisk/InstanceSeg/ddr_and_pid/mmsegmentation_11g07/configs/ddrnet/ddrnet_23-slim_in1k-pre_2xb6-120k_cityscapes-1024x1024.py
+/media/ly/AddDisk/InsSegData/pid_and_ddr_out/ddr_fordata_11g15/iter_80000.pth
+--work-dir
+/media/ly/AddDisk/InsSegData/pid_and_ddr_out/ddr_fordata_11g15/workdir
+--out
+/media/ly/AddDisk/InsSegData/pid_and_ddr_out/ddr_fordata_11g15/out
+--show
+--show-dir
+/media/ly/AddDisk/InsSegData/pid_and_ddr_out/ddr_fordata_11g15/show
+'''
 
 # TODO: support fuse_conv_bn, visualization, and format_only
 def parse_args():

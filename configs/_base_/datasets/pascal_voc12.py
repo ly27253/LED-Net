@@ -1,6 +1,7 @@
 # dataset settings
 dataset_type = 'PascalVOCDataset'
-data_root = 'data/VOCdevkit/VOC2012'
+# data_root = '/media/ly/AddDisk/InstanceSeg/mmsegmentation/data/branch'
+data_root = '/media/ly/AddDisk/InsSegData/branch_ly'
 crop_size = (512, 512)
 train_pipeline = [
     dict(type='LoadImageFromFile'),
@@ -40,28 +41,28 @@ tta_pipeline = [
         ])
 ]
 train_dataloader = dict(
-    batch_size=4,
-    num_workers=4,
+    batch_size=1,
+    num_workers=1,
     persistent_workers=True,
     sampler=dict(type='InfiniteSampler', shuffle=True),
     dataset=dict(
         type=dataset_type,
         data_root=data_root,
         data_prefix=dict(
-            img_path='JPEGImages', seg_map_path='SegmentationClass'),
-        ann_file='ImageSets/Segmentation/train.txt',
+            img_path='JPEGImages', seg_map_path='SegmentationClassPNG'),
+        ann_file='train.txt',
         pipeline=train_pipeline))
 val_dataloader = dict(
     batch_size=1,
-    num_workers=4,
+    num_workers=1,
     persistent_workers=True,
     sampler=dict(type='DefaultSampler', shuffle=False),
     dataset=dict(
         type=dataset_type,
         data_root=data_root,
         data_prefix=dict(
-            img_path='JPEGImages', seg_map_path='SegmentationClass'),
-        ann_file='ImageSets/Segmentation/val.txt',
+            img_path='JPEGImages', seg_map_path='SegmentationClassPNG'),
+        ann_file='val.txt',
         pipeline=test_pipeline))
 test_dataloader = val_dataloader
 

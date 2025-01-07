@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import math
 import torch.nn as nn
 from mmcv.cnn import ConvModule, build_norm_layer
 from mmengine.model import BaseModule
@@ -180,10 +181,11 @@ class DDRNet(BaseModule):
 
     def forward(self, x):
         """Forward function."""
-        out_size = (x.shape[-2] // 8, x.shape[-1] // 8)
+        # out_size = (x.shape[-2] // 8, x.shape[-1] // 8)
+        out_size = (math.ceil(x.shape[-2] / 8), math.ceil(x.shape[-1] / 8))  # 0527xiugai 向上取zheng
 
         # stage 0-2
-        x = self.stem(x)
+        x = self.stem(x)   # 1/8
 
         # stage3
         x_c = self.context_branch_layers[0](x)
@@ -196,7 +198,7 @@ class DDRNet(BaseModule):
             mode='bilinear',
             align_corners=self.align_corners)
         if self.training:
-            temp_context = x_s.clone()
+            temp_context = x_s.clone()   # 1/8
 
         # stage4
         x_c = self.context_branch_layers[1](self.relu(x_c))
@@ -210,9 +212,9 @@ class DDRNet(BaseModule):
             align_corners=self.align_corners)
 
         # stage5
-        x_s = self.spatial_branch_layers[2](self.relu(x_s))
+        x_s = self.spatial_branch_layers[2](self.relu(x_s))   # RBB 1/8
         x_c = self.context_branch_layers[2](self.relu(x_c))
-        x_c = self.spp(x_c)
+        x_c = self.spp(x_c)  # DAPPM
         x_c = resize(
             x_c,
             size=out_size,

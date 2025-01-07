@@ -44,6 +44,9 @@ class DDRHead(BaseDecodeHead):
         self.head = self._make_base_head(self.in_channels, self.channels)
         self.aux_head = self._make_base_head(self.in_channels // 2,
                                              self.channels)
+        self.head_x1 = self._make_base_head(32, 2)
+        self.head_x2 = self._make_base_head(32, 2)
+
         self.aux_cls_seg = nn.Conv2d(
             self.channels, self.out_channels, kernel_size=1)
 
@@ -61,17 +64,22 @@ class DDRHead(BaseDecodeHead):
             inputs: Union[Tensor,
                           Tuple[Tensor]]) -> Union[Tensor, Tuple[Tensor]]:
         if self.training:
-            c3_feat, c5_feat = inputs
-            x_c = self.head(c5_feat)
-            x_c = self.cls_seg(x_c)
+            c3_feat, c5_feat, x1, x2 = inputs
+            x_c = self.head(c5_feat)   # ly修改
+            x_c = self.cls_seg(x_c)   # ly修改
             x_s = self.aux_head(c3_feat)
             x_s = self.aux_cls_seg(x_s)
+            head_x1 = self.head_x1(x1)   # ly修改
+            head_x2 = self.head_x2(x2)   # ly修改
 
-            return x_c, x_s
+            return x_c, x_s, head_x1, head_x2   # ly修改
         else:
-            x_c = self.head(inputs)
+            head_x1 = self.head_x1(inputs[1])   # ly修改
+            head_x2 = self.head_x2(inputs[2])   # ly修改
+            x_c = self.head(inputs[0])
             x_c = self.cls_seg(x_c)
-            return x_c
+            return (x_c, head_x1, head_x2)   # ly修改
+            # return x_c
 
     def _make_base_head(self, in_channels: int,
                         channels: int) -> nn.Sequential:
@@ -93,12 +101,34 @@ class DDRHead(BaseDecodeHead):
     def loss_by_feat(self, seg_logits: Tuple[Tensor],
                      batch_data_samples: SampleList) -> dict:
         loss = dict()
-        context_logit, spatial_logit = seg_logits
+        context_logit, spatial_logit, head_x1, head_x2 = seg_logits
         seg_label = self._stack_batch_gt(batch_data_samples)
-
+        context_logit = head_x2 + resize(
+        # context_logit = resize(
+            context_logit,
+            size=tuple(s // 4 for s in seg_label.shape[2:]),
+            mode='bilinear',
+            align_corners=self.align_corners)
+        context_logit = head_x1 + resize(
+            context_logit,
+            size=tuple(s // 2 for s in seg_label.shape[2:]),
+            mode='bilinear',
+            align_corners=self.align_corners)
         context_logit = resize(
             context_logit,
             size=seg_label.shape[2:],
+            mode='bilinear',
+            align_corners=self.align_corners)
+
+        spatial_logit = head_x2 + resize(
+        # spatial_logit = resize(
+            spatial_logit,
+            size=tuple(s // 4 for s in seg_label.shape[2:]),
+            mode='bilinear',
+            align_corners=self.align_corners)
+        spatial_logit = head_x1 + resize(
+            spatial_logit,
+            size=tuple(s // 2 for s in seg_label.shape[2:]),
             mode='bilinear',
             align_corners=self.align_corners)
         spatial_logit = resize(

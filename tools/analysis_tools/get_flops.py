@@ -13,6 +13,12 @@ from mmseg.models import BaseSegmentor
 from mmseg.registry import MODELS
 from mmseg.structures import SegDataSample
 
+'''
+/home/g/segmentation/0705_seg/mmseg_06g06/configs/pidnet/pidnet-s_2xb6-120k_1024x1024-cityscapes.py
+
+/home/g/segmentation/0705_seg/mmseg_06g06/configs/ddrnet/ddrnet_23-slim_in1k-pre_2xb6-120k_cityscapes-1024x1024.py
+'''
+
 try:
     from mmengine.analysis import get_model_complexity_info
     from mmengine.analysis.print_helper import _format_size
@@ -28,7 +34,8 @@ def parse_args():
         '--shape',
         type=int,
         nargs='+',
-        default=[2048, 1024],
+        # default=[2048, 1024],
+        default=[1280, 720],
         help='input image size')
     parser.add_argument(
         '--cfg-options',

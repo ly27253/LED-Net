@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from typing import Tuple, Union
 
+import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -469,18 +470,20 @@ class PIDNet(BaseModule):
             Tensor or tuple[Tensor]: If self.training is True, return
                 tuple[Tensor], else return Tensor.
         """
-        w_out = x.shape[-1] // 8
-        h_out = x.shape[-2] // 8
+        # w_out = x.shape[-1] // 8
+        # h_out = x.shape[-2] // 8
+        w_out = math.ceil(x.shape[-1] / 8)
+        h_out = math.ceil(x.shape[-2] / 8)  # 0528修改 向上取zheng
 
-        # stage 0-2
+        # stage 0-1
         x = self.stem(x)
 
-        # stage 3
-        x_i = self.relu(self.i_branch_layers[0](x))
-        x_p = self.p_branch_layers[0](x)
-        x_d = self.d_branch_layers[0](x)
+        # 论文中stage-2
+        x_i = self.relu(self.i_branch_layers[0](x))   # 1/16
+        x_p = self.p_branch_layers[0](x)   # 1/8
+        x_d = self.d_branch_layers[0](x)   # 1/8
 
-        comp_i = self.compression_1(x_i)
+        comp_i = self.compression_1(x_i)   # c 128->64
         x_p = self.pag_1(x_p, comp_i)
         diff_i = self.diff_1(x_i)
         x_d += F.interpolate(
@@ -491,8 +494,8 @@ class PIDNet(BaseModule):
         if self.training:
             temp_p = x_p.clone()
 
-        # stage 4
-        x_i = self.relu(self.i_branch_layers[1](x_i))
+        # 论文中stage-3
+        x_i = self.relu(self.i_branch_layers[1](x_i))  # 1/32
         x_p = self.p_branch_layers[1](self.relu(x_p))
         x_d = self.d_branch_layers[1](self.relu(x_d))
 
@@ -507,16 +510,16 @@ class PIDNet(BaseModule):
         if self.training:
             temp_d = x_d.clone()
 
-        # stage 5
-        x_i = self.i_branch_layers[2](x_i)
+        # 论文中stage-4
+        x_i = self.i_branch_layers[2](x_i)   # 1/64
         x_p = self.p_branch_layers[2](self.relu(x_p))
         x_d = self.d_branch_layers[2](self.relu(x_d))
 
-        x_i = self.spp(x_i)
+        x_i = self.spp(x_i)   # PPM
         x_i = F.interpolate(
             x_i,
             size=[h_out, w_out],
             mode='bilinear',
             align_corners=self.align_corners)
-        out = self.dfm(x_p, x_i, x_d)
+        out = self.dfm(x_p, x_i, x_d)   # Bag
         return (temp_p, out, temp_d) if self.training else out

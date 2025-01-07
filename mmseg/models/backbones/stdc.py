@@ -7,8 +7,10 @@ from mmcv.cnn import ConvModule
 from mmengine.model import BaseModule, ModuleList, Sequential
 
 from mmseg.registry import MODELS
-from ..utils import resize
-from .bisenetv1 import AttentionRefinementModule
+# from ..utils import resize
+from mmseg.models.utils import resize
+# from .bisenetv1 import AttentionRefinementModule
+from mmseg.models.backbones.bisenetv1 import AttentionRefinementModule
 
 
 class STDCModule(BaseModule):
@@ -229,6 +231,7 @@ class STDCNet(BaseModule):
         'STDCNet2': [(2, 1, 1, 1), (2, 1, 1, 1, 1), (2, 1, 1)]
     }
 
+
     def __init__(self,
                  stdc_type,
                  in_channels,
@@ -323,6 +326,7 @@ class STDCNet(BaseModule):
             outs[-1] = self.final_conv(outs[-1])
         outs = outs[self.num_shallow_features:]
         return tuple(outs)
+
 
 
 @MODELS.register_module()
@@ -420,3 +424,7 @@ class STDCContextPathNet(BaseModule):
         # `feat_fuse` is outputted for decoder head.
         outputs = [outs[0]] + list(arms_out) + [feat_fuse]
         return tuple(outputs)
+
+# net = STDCNet('STDCNet1',3,(32, 64, 256, 512, 1024),'cat',None,None)
+# img = torch.rand([2,3,256,256])
+# net(img)
