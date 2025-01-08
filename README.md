@@ -3,6 +3,10 @@
 <p align="center">
   <img src="./Figure_4.png" alt="Compares branch segmentation accuracy, computational cost, and parameter size on the orchard dataset. Smaller circle radii indicate fewer parameters. Our method achieves an optimal balance among these metrics." width="60%">
 </p>
+<p align="center">
+  Compares branch segmentation accuracy, computational cost, and parameter size on the orchard dataset. Smaller circle radii indicate fewer parameters. Our method achieves an optimal balance among these metrics.
+</p>
+
 
 ## 1. Environment Setup  
 This project is built on top of [MMsegmentation](https://github.com/open-mmlab/mmsegmentation). To configure the environment, please follow the official installation guide:  
