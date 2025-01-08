@@ -1,4 +1,8 @@
-# LED-Net Setup Guide
+# LED-Net
+
+<p align="center">
+  <img src="./Figure_4.png" alt="Compares branch segmentation accuracy, computational cost, and parameter size on the orchard dataset. Smaller circle radii indicate fewer parameters. Our method achieves an optimal balance among these metrics." width="80%">
+</p>
 
 ## 1. Environment Setup  
 This project is built on top of [MMsegmentation](https://github.com/open-mmlab/mmsegmentation). To configure the environment, please follow the official installation guide:  
