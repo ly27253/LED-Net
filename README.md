@@ -54,3 +54,8 @@ To evaluate the computational complexity of the model (FLOPs), utilize the `get_
 
 ## 6. Inference Speed Benchmarking  
 For benchmarking the inference speed of the trained model, use the `benchmark.py` script. Adjust the script parameters as needed to assess the model’s efficiency under different conditions.
+
+## Acknowledgements
+
+We would like to express our sincere gratitude to outstanding open-source projects such as [MMsegmentation](https://github.com/open-mmlab/mmsegmentation), [DDRNet](http://arxiv.org/abs/2101.06085), [PIDNet](https://arxiv.org/pdf/2206.02066.pdf), and [DSNet](https://github.com/takaniwa/DSNet) for providing valuable inspiration and technical support for our research. Our project is based on these excellent works, and we have been deeply inspired by their innovative ideas. We are thankful to the open-source community for their contributions, which enable us to continue advancing and innovating upon existing achievements.
+
