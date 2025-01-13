@@ -38,7 +38,7 @@ To train the LED-Net model, use the configuration file located at:
 `../configs/LED_Net/LEDNet_80k_cityscapes-1024x1024.py`  
 
 Specify the work directory where logs and model checkpoints will be saved:  
-`--work-dir`, default path is `../LEDNet_fordata_11g07`. This directory is where logs and models will be stored.  
+`--work-dir`, default path is `../LEDNet_fordata_11g15`. This directory is where logs and models will be stored.  
 
 Adjust additional training parameters according to the provided documentation to suit your specific requirements.
 
