@@ -33,6 +33,9 @@ To integrate this dataset into your workflow, please update the dataset path and
 **Dataset Download**:  
 You can download the *Apple Branch Seg data* dataset from [Apple Branch Seg data](https://drive.google.com/drive/u/0/folders/1Yw_rb0LoRG5CbLaSbzgNX7aReTlF5cWA). 
 
+**Extended Evaluation Sets**:  
+To further validate the model’s generalization capability, we provide two additional validation sets collected from different seasons, years, and regions, named [**Apple Branch Seg-Val2021**](https://drive.google.com/drive/u/0/folders/1Yw_rb0LoRG5CbLaSbzgNX7aReTlF5cWA) and [**Apple Branch Seg-Val2023**](https://drive.google.com/drive/u/0/folders/1Yw_rb0LoRG5CbLaSbzgNX7aReTlF5cWA).  
+
 ## 3. Model Training  
 To train the LED-Net model, use the configuration file located at:  
 `../configs/LED_Net/LEDNet_80k_cityscapes-1024x1024.py`  
