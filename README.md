@@ -31,7 +31,7 @@ In addition to the configuration files provided for commonly used public dataset
 To integrate this dataset into your workflow, please update the dataset path and directory structure in the `../configs/_base_/datasets/pascal_voc12.py` configuration file. Additionally, ensure that the `classes` and `palette` settings in the `../mmseg/datasets/voc.py` file are adjusted to reflect the specific classes and image file extensions used in your dataset.
 
 **Dataset Download**:  
-You can download the *Apple Branch Seg data* dataset from [Apple Branch Seg data](https://drive.google.com/drive/u/0/folders/1Yw_rb0LoRG5CbLaSbzgNX7aReTlF5cWA). 
+You can download the *Apple Branch Seg data* dataset from [**Apple Branch Seg data**](https://drive.google.com/drive/u/0/folders/1Yw_rb0LoRG5CbLaSbzgNX7aReTlF5cWA). 
 
 **Extended Evaluation Sets**:  
 To further validate the model’s generalization capability, we provide two additional validation sets collected from different seasons, years, and regions, named [**Apple Branch Seg-Val2021**](https://drive.google.com/drive/u/0/folders/1Yw_rb0LoRG5CbLaSbzgNX7aReTlF5cWA) and [**Apple Branch Seg-Val2023**](https://drive.google.com/drive/u/0/folders/1Yw_rb0LoRG5CbLaSbzgNX7aReTlF5cWA).  
