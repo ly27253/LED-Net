@@ -9,10 +9,17 @@
 
 
 <p align="center">
-  <img src="./Figure3.png" alt="Compares branch segmentation accuracy, computational cost, and parameter size on the orchard dataset. Smaller circle radii indicate fewer parameters. Our method achieves an optimal balance among these metrics." width="60%">
+  <img src="./figure3.png" alt="Compares branch segmentation accuracy, computational cost, and parameter size on the orchard dataset. Smaller circle radii indicate fewer parameters. Our method achieves an optimal balance among these metrics." width="95%">
 </p>
 <p align="center">
   (a) Overall network framework, (b) Semantic Segmentation Head.
+</p>
+
+<p align="center">
+  <img src="./figure10.png" alt="Compares branch segmentation accuracy, computational cost, and parameter size on the orchard dataset. Smaller circle radii indicate fewer parameters. Our method achieves an optimal balance among these metrics." width="95%">
+</p>
+<p align="center">
+  Qualitative comparison of branch segmentation results on real orchard tree branches. (a) Ground truth; (b) LED-Net; (c) PIDNet; (d) DDRNet; (e) SegNeXt; (f) BiSeNetV2; (g) STDC2; (h) STDC1; (i) HRNet; (j) BiSeNetV1.
 </p>
 
 ## 1. Environment Setup  
